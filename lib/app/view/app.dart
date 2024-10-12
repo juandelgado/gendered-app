@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gendered/counter/counter.dart';
 import 'package:gendered/l10n/l10n.dart';
+import 'package:gendered/nouns/view/nouns_page.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -16,7 +16,7 @@ class App extends StatelessWidget {
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const CounterPage(),
+      home: const NounsPage(),
     );
   }
 }

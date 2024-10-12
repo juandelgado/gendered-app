@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gendered/app/app.dart';
-import 'package:gendered/counter/counter.dart';
+import 'package:gendered/nouns/view/nouns_page.dart';
 
 void main() {
   group('App', () {
-    testWidgets('renders CounterPage', (tester) async {
+    testWidgets('renders Nouns page', (tester) async {
       await tester.pumpWidget(const App());
-      expect(find.byType(CounterPage), findsOneWidget);
+      expect(find.byType(NounsPage), findsOneWidget);
     });
   });
 }
