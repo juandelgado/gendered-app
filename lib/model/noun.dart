@@ -1,12 +1,12 @@
 import 'package:equatable/equatable.dart';
-import 'package:gendered/model/genre.dart';
+import 'package:gendered/model/gender.dart';
 
 class Noun with EquatableMixin {
-  const Noun({required this.name, required this.genre});
+  const Noun({required this.name, required this.gender});
 
   final String name;
-  final Genre genre;
+  final Gender gender;
 
   @override
-  List<Object> get props => [name, genre];
+  List<Object> get props => [name, gender];
 }

@@ -1,0 +1,17 @@
+{
+    "@@locale": "de",
+    "nounsAppBarTitle": "Sustantive",
+    "@nounsAppBarTitle": {},
+    "feminine": "Feminin",
+    "@feminine": {},
+    "masculine": "Maskulin",
+    "@masculine": {},
+    "neuter": "Neutrum",
+    "@neuter": {},
+    "next": "Nächste",
+    "@next": {},
+    "something_went_wrong": "Da ist etwas schiefgelaufen",
+    "@something_went_wrong": {},
+    "try_again": "Versuchen Sie es erneut",
+    "@try_again": {}
+}

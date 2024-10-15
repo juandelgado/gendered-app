@@ -1,6 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gendered/model/genre.dart';
+import 'package:gendered/model/gender.dart';
 import 'package:gendered/model/noun.dart';
 import 'package:gendered/nouns/cubit/nouns_cubit.dart';
 import 'package:gendered/repository/nouns_repository.dart';
@@ -8,7 +8,7 @@ import 'package:mocktail/mocktail.dart';
 
 class MockNounsRepository extends Mock implements NounsRepository {}
 
-const femenineNoun = Noun(name: 'lol', genre: Genre.femenine);
+const feminineNoun = Noun(name: 'lol', gender: Gender.feminine);
 
 void main() {
   group('Nouns Cubit', () {
@@ -28,7 +28,7 @@ void main() {
       'emits NounsLoading and NounsLoaded during load',
       setUp: () {
         when(() => mockRepository.load()).thenAnswer(
-          (_) async => femenineNoun,
+          (_) async => feminineNoun,
         );
       },
       build: () => cubit,
@@ -36,8 +36,8 @@ void main() {
       expect: () => [isA<NounsLoading>(), isA<NounsLoaded>()],
       verify: (cubit) {
         final noun = (cubit.state as NounsLoaded).noun;
-        expect(noun.name, femenineNoun.name);
-        expect(noun.genre, femenineNoun.genre);
+        expect(noun.name, feminineNoun.name);
+        expect(noun.gender, feminineNoun.gender);
       },
     );
 
@@ -55,13 +55,13 @@ void main() {
       'emits NounsCorrect if the answer is correct and loads next noun',
       setUp: () {
         when(() => mockRepository.load()).thenAnswer(
-          (_) async => femenineNoun,
+          (_) async => feminineNoun,
         );
       },
       build: () => cubit,
       act: (cubit) => cubit.validate(
-        noun: femenineNoun,
-        answer: Genre.femenine,
+        noun: feminineNoun,
+        answer: Gender.feminine,
       ),
       expect: () =>
           [isA<NounsCorrect>(), isA<NounsLoading>(), isA<NounsLoaded>()],
@@ -71,13 +71,13 @@ void main() {
       'emits NounsIncorrect if the answer is incorrect',
       setUp: () {
         when(() => mockRepository.load()).thenAnswer(
-          (_) async => femenineNoun,
+          (_) async => feminineNoun,
         );
       },
       build: () => cubit,
       act: (cubit) => cubit.validate(
-        noun: femenineNoun,
-        answer: Genre.masculine,
+        noun: feminineNoun,
+        answer: Gender.masculine,
       ),
       expect: () => [isA<NounsIncorrect>()],
     );
