@@ -26,6 +26,7 @@ jobs:
       flutter_version: 3.24.3
       test_recursion: true
       coverage_excludes: '*.g.dart'
+      min_coverage: 75
 
   spell-check:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/spell_check.yml@v1
