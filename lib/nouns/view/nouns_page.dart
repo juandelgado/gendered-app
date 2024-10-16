@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gendered/model/genre.dart';
+import 'package:gendered/app/cubit/language_cubit.dart';
+import 'package:gendered/extensions/string_extensions.dart';
+import 'package:gendered/l10n/l10n.dart';
+import 'package:gendered/model/gender.dart';
 import 'package:gendered/model/noun.dart';
 import 'package:gendered/nouns/cubit/nouns_cubit.dart';
 
@@ -28,9 +31,12 @@ class NounsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final l10n = context.l10n;
+    final language = context.read<LanguageCubit>().state;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Nouns'),
+        title: Text('${language.name} ${language.flag}'),
       ),
       body: BlocBuilder<NounsCubit, NounsState>(
         builder: (context, state) {
@@ -45,10 +51,10 @@ class NounsView extends StatelessWidget {
                     final noun = (state as NounsIncorrect).noun;
                     return NounsViewIncorrect(
                       noun: noun,
-                      onGenreSelected: (genre) {
+                      onGenderSelected: (gender) {
                         context
                             .read<NounsCubit>()
-                            .validate(noun: noun, answer: genre);
+                            .validate(noun: noun, answer: gender);
                       },
                       onNextNoun: () {
                         context.read<NounsCubit>().load();
@@ -58,10 +64,10 @@ class NounsView extends StatelessWidget {
                     final noun = (state as NounsLoaded).noun;
                     return NounsViewLoaded(
                       noun: noun,
-                      onGenreSelected: (genre) {
+                      onGenderSelected: (gender) {
                         context
                             .read<NounsCubit>()
-                            .validate(noun: noun, answer: genre);
+                            .validate(noun: noun, answer: gender);
                       },
                     );
                   case NounsLoadingError:
@@ -86,26 +92,27 @@ class NounsViewIncorrect extends StatelessWidget {
   const NounsViewIncorrect({
     required this.onNextNoun,
     required this.noun,
-    required this.onGenreSelected,
+    required this.onGenderSelected,
     super.key,
   });
 
   final Noun noun;
-  final ValueChanged<Genre> onGenreSelected;
+  final ValueChanged<Gender> onGenderSelected;
   final VoidCallback onNextNoun;
   static const Key nextKey = Key('NounsViewIncorrectNext');
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         const Text('❌'),
-        NounsViewLoaded(noun: noun, onGenreSelected: onGenreSelected),
+        NounsViewLoaded(noun: noun, onGenderSelected: onGenderSelected),
         ElevatedButton(
           key: nextKey,
           onPressed: onNextNoun,
-          child: const Text('Next'),
+          child: Text(l10n.next),
         ),
       ],
     );
@@ -134,15 +141,18 @@ class NounsViewCorrect extends StatelessWidget {
 class NounsViewLoaded extends StatelessWidget {
   const NounsViewLoaded({
     required this.noun,
-    this.onGenreSelected,
+    this.onGenderSelected,
     super.key,
   });
 
   final Noun noun;
-  final ValueChanged<Genre>? onGenreSelected;
+  final ValueChanged<Gender>? onGenderSelected;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final language = context.read<LanguageCubit>().state;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -150,30 +160,14 @@ class NounsViewLoaded extends StatelessWidget {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ElevatedButton(
-              onPressed: onGenreSelected == null
-                  ? null
-                  : () => onGenreSelected!(Genre.femenine),
-              child: Text(
-                Genre.femenine.name,
+            for (final gender in language.genders)
+              ElevatedButton(
+                key: Key('selectGender${gender.name.capitalize()}'),
+                onPressed: onGenderSelected == null
+                    ? null
+                    : () => onGenderSelected!(gender),
+                child: Text(l10n.getGender(gender)),
               ),
-            ),
-            ElevatedButton(
-              onPressed: onGenreSelected == null
-                  ? null
-                  : () => onGenreSelected!(Genre.neuter),
-              child: Text(
-                Genre.neuter.name,
-              ),
-            ),
-            ElevatedButton(
-              onPressed: onGenreSelected == null
-                  ? null
-                  : () => onGenreSelected!(Genre.masculine),
-              child: Text(
-                Genre.masculine.name,
-              ),
-            ),
           ],
         ),
       ],
@@ -199,14 +193,15 @@ class NounsViewLoadingError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Text('Something went wrong'),
+        Text(l10n.something_went_wrong),
         ElevatedButton(
           key: tryAgainKey,
           onPressed: onTryAgain,
-          child: const Text('Try again'),
+          child: Text(l10n.try_again),
         ),
       ],
     );

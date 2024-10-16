@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:gendered/model/genre.dart';
+import 'package:gendered/model/gender.dart';
 import 'package:gendered/model/noun.dart';
 import 'package:gendered/repository/nouns_repository.dart';
 import 'package:meta/meta.dart';
@@ -27,8 +27,8 @@ class NounsCubit extends Cubit<NounsState> {
     }
   }
 
-  Future<void> validate({required Noun noun, required Genre answer}) async {
-    if (noun.genre == answer) {
+  Future<void> validate({required Noun noun, required Gender answer}) async {
+    if (noun.gender == answer) {
       emit(NounsCorrect(noun: noun));
       await Future<void>.delayed(const Duration(milliseconds: 1500));
       unawaited(load());
