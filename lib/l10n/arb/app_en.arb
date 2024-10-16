@@ -1,0 +1,37 @@
+{
+    "@@locale": "en",
+    "feminine": "Feminine",
+    "@feminine": {},
+    "masculine": "Masculine",
+    "@masculine": {},
+    "neuter": "Neuter",
+    "@neuter": {},
+    "next": "Next",
+    "@next": {},
+    "something_went_wrong": "Something went wrong",
+    "@something_went_wrong": {},
+    "try_again": "Try again",
+    "@try_again": {},
+    "set_as_gender": "Mark as {gender}",
+    "@set_as_gender": {
+        "placeholders": {
+            "gender": {
+                "type": "String"
+            }
+        }
+    },
+    "correct_answer": "Your answer was correct",
+    "@correct_answer": {},
+    "incorrect_answer": "Your answer was incorrect",
+    "@incorrect_answer": {},
+    "load_next_noun": "Load next noun",
+    "@load_next_noun": {},
+    "reader_the_word_is": "The noun is {noun}",
+    "@reader_the_word_is": {
+        "placeholders": {
+            "noun": {
+                "type": "String"
+            }
+        }
+    }
+}
