@@ -1,17 +1,14 @@
 {
     "@@locale": "de",
-    "nounsAppBarTitle": "Sustantive",
-    "@nounsAppBarTitle": {},
     "feminine": "Feminin",
-    "@feminine": {},
     "masculine": "Maskulin",
-    "@masculine": {},
     "neuter": "Neutrum",
-    "@neuter": {},
     "next": "Nächste",
-    "@next": {},
     "something_went_wrong": "Da ist etwas schiefgelaufen",
-    "@something_went_wrong": {},
     "try_again": "Versuchen Sie es erneut",
-    "@try_again": {}
+    "set_as_gender": "Setzen Sie dieses Substantiv als {gender}",
+    "correct_answer": "Ihre Antwort war richtig",
+    "incorrect_answer": "Ihre Antwort war falsch",
+    "load_next_noun": "Laden Sie das nächste Substantiv",
+    "reader_the_word_is": "Das Substantiv ist {noun}"
 }

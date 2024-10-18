@@ -22,7 +22,7 @@ void main() {
   });
 
   group('NounsPage', () {
-    late MockNounsCubit mockCubit;
+    late NounsCubit mockCubit;
 
     setUpAll(() {
       mockCubit = MockNounsCubit();
@@ -39,6 +39,7 @@ void main() {
         ),
       );
       expect(find.byType(NounsView), findsOneWidget);
+      await tester.a11yCheck();
     });
   });
 
@@ -60,6 +61,7 @@ void main() {
       );
 
       expect(find.byType(NounsViewLoading), findsOneWidget);
+      await tester.a11yCheck();
     });
 
     testWidgets('renders NounsViewLoading for NounsLoading', (tester) async {
@@ -73,6 +75,7 @@ void main() {
       );
 
       expect(find.byType(NounsViewLoading), findsOneWidget);
+      await tester.a11yCheck();
     });
 
     testWidgets('renders NounsViewLoadingError for NounsLoadingError',
@@ -91,6 +94,7 @@ void main() {
       await tester.tap(find.byKey(NounsViewLoadingError.tryAgainKey));
 
       verify(() => mockCubit.load()).called(1);
+      await tester.a11yCheck();
     });
 
     testWidgets('renders NounsViewIncorrect for NounsIncorrect',
@@ -109,6 +113,7 @@ void main() {
 
       await tester.tap(find.byKey(NounsViewIncorrect.nextKey));
       verify(() => mockCubit.load()).called(1);
+      await tester.a11yCheck();
     });
 
     testWidgets('renders NounsViewCorrect for NounsCorrect', (tester) async {
@@ -122,6 +127,7 @@ void main() {
       );
 
       expect(find.byType(NounsViewCorrect), findsOneWidget);
+      await tester.a11yCheck();
     });
 
     testWidgets('renders NounsViewLoaded for NounsLoaded', (tester) async {
@@ -157,6 +163,7 @@ void main() {
         await tester.tap(genderWidget);
         verify(() => mockCubit.validate(noun: feminineNoun, answer: gender))
             .called(1);
+        await tester.a11yCheck();
       }
     });
   });

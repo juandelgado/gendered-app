@@ -13,8 +13,6 @@ class App extends StatelessWidget {
     // NOTE (JD): optional cubit to enable testing
     final nounsCubit = context.read<NounsCubit?>();
 
-    // https://docs.flutter.dev/ui/accessibility-and-internationalization/internationalization#overriding-the-locale
-
     return MaterialApp(
       theme: ThemeData(
         appBarTheme: AppBarTheme(
@@ -28,21 +26,12 @@ class App extends StatelessWidget {
         create: (context) => LanguageCubit(),
         child: Builder(
           builder: (context) {
-            // NOTE we override the locale because regardless of the
-            // locale of the device, we want the interface
-            // set to the locale defined in the app
-            final appLocale = context.read<LanguageCubit>().state.locale;
-
-            return Localizations.override(
-              context: context,
-              locale: Locale(appLocale),
-              child: Builder(
-                builder: (context) {
-                  return NounsPage(
-                    cubit: nounsCubit,
-                  );
-                },
-              ),
+            return Builder(
+              builder: (context) {
+                return NounsPage(
+                  cubit: nounsCubit,
+                );
+              },
             );
           },
         ),
