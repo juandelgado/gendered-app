@@ -3,11 +3,13 @@ import 'package:flutter/semantics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gendered/app/cubit/language_cubit.dart';
 import 'package:gendered/extensions/string_extensions.dart';
+import 'package:gendered/extensions/theme_extensions.dart';
 import 'package:gendered/l10n/l10n.dart';
 import 'package:gendered/model/gender.dart';
 import 'package:gendered/model/noun.dart';
 import 'package:gendered/nouns/cubit/nouns_cubit.dart';
 import 'package:gendered/widgets/app_buttons.dart';
+import 'package:gendered/widgets/app_svg_icon.dart';
 import 'package:gendered/widgets/semantics/app_widget_semantics.dart';
 
 class NounsPage extends StatelessWidget {
@@ -36,65 +38,146 @@ class NounsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final language = context.read<LanguageCubit>().state;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
+    return BlocBuilder<NounsCubit, NounsState>(
+      builder: (context, state) {
+        final noun = (state is NounStateWithNoun) ? state.noun : null;
+
+        return Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(language.name),
+                ExcludeSemantics(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Text(language.flag),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Center(
+                child: Builder(
+                  builder: (context) {
+                    switch (state.runtimeType) {
+                      case NounsCorrect:
+                        return NounsViewCorrect(noun: noun!);
+                      case NounsIncorrect:
+                        return NounsViewIncorrect(
+                          noun: noun!,
+                          onGenderSelected: (gender) {
+                            context
+                                .read<NounsCubit>()
+                                .validate(noun: noun, answer: gender);
+                          },
+                          onNextNoun: () {
+                            context.read<NounsCubit>().load();
+                          },
+                        );
+                      case NounsLoaded:
+                        return NounsViewLoaded(
+                          noun: noun!,
+                        );
+                      case NounsLoadingError:
+                        return NounsViewLoadingError(
+                          onTryAgain: () {
+                            context.read<NounsCubit>().load();
+                          },
+                        );
+                      default:
+                        return const NounsViewLoading();
+                    }
+                  },
+                ),
+              ),
+            ),
+          ),
+          bottomNavigationBar: NounsBottomBar(
+            onGenderSelected: noun == null || state is NounsCorrect
+                ? null
+                : (anwswer) {
+                    context
+                        .read<NounsCubit>()
+                        .validate(noun: noun, answer: anwswer);
+                  },
+            onNextNoun: noun == null || state is NounsCorrect
+                ? null
+                : () {
+                    context.read<NounsCubit>().load();
+                  },
+            onPreviousNoun: noun == null || state is NounsCorrect
+                ? null
+                : () {
+                    context.read<NounsCubit>().previous();
+                  },
+          ),
+        );
+      },
+    );
+  }
+}
+
+class NounsBottomBar extends StatelessWidget {
+  const NounsBottomBar({
+    required this.onGenderSelected,
+    required this.onNextNoun,
+    required this.onPreviousNoun,
+    super.key,
+  });
+
+  final ValueChanged<Gender>? onGenderSelected;
+  final VoidCallback? onNextNoun;
+  final VoidCallback? onPreviousNoun;
+  static const Key previousKey = Key('NounsBottomBarPrevious');
+  static const Key nextKey = Key('NounsBottomBarNext');
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final language = context.read<LanguageCubit>().state;
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(language.name),
-            ExcludeSemantics(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: Text(language.flag),
+            CircularWidgetButton(
+              key: previousKey,
+              hint: l10n.load_previous_noun,
+              onPressed: onPreviousNoun,
+              child: const AppSvgIcon(
+                assetPath: 'assets/icons/svg/arrow_back_24dp.svg',
+                width: 24,
+                height: 24,
+              ),
+            ),
+            for (final gender in language.genders)
+              CircularTextButton(
+                key: Key('selectGender${gender.name.capitalize()}'),
+                hint: l10n.set_as_gender(l10n.getGender(gender)),
+                text: l10n.getGender(gender).substring(0, 1).toUpperCase(),
+                onPressed: onGenderSelected == null
+                    ? null
+                    : () => onGenderSelected!(gender),
+              ),
+            CircularWidgetButton(
+              key: nextKey,
+              hint: l10n.load_next_noun,
+              onPressed: onNextNoun,
+              child: const AppSvgIcon(
+                assetPath: 'assets/icons/svg/arrow_forward_24dp.svg',
+                width: 24,
+                height: 24,
               ),
             ),
           ],
         ),
-      ),
-      body: BlocBuilder<NounsCubit, NounsState>(
-        builder: (context, state) {
-          return Center(
-            child: Builder(
-              builder: (context) {
-                switch (state.runtimeType) {
-                  case NounsCorrect:
-                    final noun = (state as NounsCorrect).noun;
-                    return NounsViewCorrect(noun: noun);
-                  case NounsIncorrect:
-                    final noun = (state as NounsIncorrect).noun;
-                    return NounsViewIncorrect(
-                      noun: noun,
-                      onGenderSelected: (gender) {
-                        context
-                            .read<NounsCubit>()
-                            .validate(noun: noun, answer: gender);
-                      },
-                      onNextNoun: () {
-                        context.read<NounsCubit>().load();
-                      },
-                    );
-                  case NounsLoaded:
-                    final noun = (state as NounsLoaded).noun;
-                    return NounsViewLoaded(
-                      noun: noun,
-                      onGenderSelected: (gender) {
-                        context
-                            .read<NounsCubit>()
-                            .validate(noun: noun, answer: gender);
-                      },
-                    );
-                  case NounsLoadingError:
-                    return NounsViewLoadingError(
-                      onTryAgain: () {
-                        context.read<NounsCubit>().load();
-                      },
-                    );
-                  default:
-                    return const NounsViewLoading();
-                }
-              },
-            ),
-          );
-        },
       ),
     );
   }
@@ -111,25 +194,21 @@ class NounsViewIncorrect extends StatelessWidget {
   final Noun noun;
   final ValueChanged<Gender> onGenderSelected;
   final VoidCallback onNextNoun;
-  static const Key nextKey = Key('NounsViewIncorrectNext');
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Column(
-      mainAxisSize: MainAxisSize.min,
       children: [
+        NounsViewLoaded(noun: noun),
         AppWidgetSemantics(
           value: l10n.incorrect_answer,
           isLiveRegion: true,
-          child: const Text('❌'),
-        ),
-        NounsViewLoaded(noun: noun, onGenderSelected: onGenderSelected),
-        PrimaryButton(
-          key: nextKey,
-          onPressed: onNextNoun,
-          text: l10n.next,
-          hint: l10n.load_next_noun,
+          child: const AppSvgIcon(
+            assetPath: 'assets/icons/svg/close_24dp.svg',
+            width: 100,
+            height: 100,
+          ),
         ),
       ],
     );
@@ -145,15 +224,18 @@ class NounsViewCorrect extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Column(
-      mainAxisSize: MainAxisSize.min,
       children: [
+        NounsViewLoaded(
+          noun: noun,
+        ),
         AppWidgetSemantics(
           value: l10n.correct_answer,
           isLiveRegion: true,
-          child: const Text('✅'),
-        ),
-        NounsViewLoaded(
-          noun: noun,
+          child: const AppSvgIcon(
+            assetPath: 'assets/icons/svg/check_24dp.svg',
+            width: 100,
+            height: 100,
+          ),
         ),
       ],
     );
@@ -163,37 +245,20 @@ class NounsViewCorrect extends StatelessWidget {
 class NounsViewLoaded extends StatelessWidget {
   const NounsViewLoaded({
     required this.noun,
-    this.onGenderSelected,
     super.key,
   });
 
   final Noun noun;
-  final ValueChanged<Gender>? onGenderSelected;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final language = context.read<LanguageCubit>().state;
-
     return Column(
-      mainAxisSize: MainAxisSize.min,
       children: [
-        LocalisedNoun(
-          noun: noun,
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (final gender in language.genders)
-              PrimaryButton(
-                key: Key('selectGender${gender.name.capitalize()}'),
-                onPressed: onGenderSelected == null
-                    ? null
-                    : () => onGenderSelected!(gender),
-                text: l10n.getGender(gender),
-                hint: l10n.set_as_gender(l10n.getGender(gender)),
-              ),
-          ],
+        Padding(
+          padding: const EdgeInsets.only(top: 120),
+          child: LocalisedNoun(
+            noun: noun,
+          ),
         ),
       ],
     );
@@ -220,10 +285,9 @@ class NounsViewLoadingError extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Column(
-      mainAxisSize: MainAxisSize.min,
       children: [
         Text(l10n.something_went_wrong),
-        PrimaryButton(
+        PrimaryTextButton(
           key: tryAgainKey,
           onPressed: onTryAgain,
           text: l10n.try_again,
@@ -242,6 +306,8 @@ class LocalisedNoun extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final textTheme = context.textTheme;
+    final colorScheme = context.colorScheme;
     final language = context.read<LanguageCubit>().state;
     final completeValue = l10n.reader_the_word_is(noun.name);
 
@@ -260,7 +326,11 @@ class LocalisedNoun extends StatelessWidget {
         ],
       ),
       child: ExcludeSemantics(
-        child: Text(noun.name),
+        child: Text(
+          textAlign: TextAlign.center,
+          noun.name,
+          style: textTheme.displayLarge?.copyWith(color: colorScheme.primary),
+        ),
       ),
     );
   }

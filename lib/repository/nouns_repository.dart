@@ -11,6 +11,7 @@ final List<Noun> _nouns = [
   const Noun(name: 'Gebäude', gender: Gender.neuter),
   const Noun(name: 'Teppich', gender: Gender.masculine),
   const Noun(name: 'Sittich', gender: Gender.masculine),
+  const Noun(name: 'Backpfeifengesicht', gender: Gender.neuter),
 ];
 
 class NounsRepository {

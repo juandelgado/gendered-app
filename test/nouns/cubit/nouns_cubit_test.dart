@@ -8,7 +8,8 @@ import 'package:mocktail/mocktail.dart';
 
 class MockNounsRepository extends Mock implements NounsRepository {}
 
-const feminineNoun = Noun(name: 'lol', gender: Gender.feminine);
+const feminineNoun = Noun(name: 'Wadus', gender: Gender.feminine);
+const neuterNoun = Noun(name: 'WadusWadus', gender: Gender.neuter);
 
 void main() {
   group('Nouns Cubit', () {
@@ -38,6 +39,7 @@ void main() {
         final noun = (cubit.state as NounsLoaded).noun;
         expect(noun.name, feminineNoun.name);
         expect(noun.gender, feminineNoun.gender);
+        expect(cubit.sessionNouns.length, 1);
       },
     );
 
@@ -80,6 +82,41 @@ void main() {
         answer: Gender.masculine,
       ),
       expect: () => [isA<NounsIncorrect>()],
+    );
+
+    blocTest<NounsCubit, NounsState>(
+      'does not emit for previous noun if session nouns is empty',
+      build: () => cubit,
+      act: (cubit) => cubit.previous(),
+      verify: (cubit) => expect(cubit.state, isA<NounsInitial>()),
+    );
+
+    blocTest<NounsCubit, NounsState>(
+      'emits NounsLoaded for the only noun in the session if there is only one',
+      setUp: () {
+        cubit.sessionNouns.add(feminineNoun);
+      },
+      build: () => cubit,
+      act: (cubit) => cubit.previous(),
+      expect: () => [isA<NounsLoading>(), isA<NounsLoaded>()],
+      verify: (cubit) {
+        final noun = (cubit.state as NounsLoaded).noun;
+        expect(noun, feminineNoun);
+      },
+    );
+
+    blocTest<NounsCubit, NounsState>(
+      'emits NounsLoaded for last noun when previous is called',
+      setUp: () {
+        cubit.sessionNouns.addAll([feminineNoun, neuterNoun]);
+      },
+      build: () => cubit,
+      act: (cubit) => cubit.previous(),
+      expect: () => [isA<NounsLoading>(), isA<NounsLoaded>()],
+      verify: (cubit) {
+        final noun = (cubit.state as NounsLoaded).noun;
+        expect(noun, neuterNoun);
+      },
     );
   });
 }

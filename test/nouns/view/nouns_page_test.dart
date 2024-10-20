@@ -101,7 +101,6 @@ void main() {
         (tester) async {
       when(() => mockCubit.state)
           .thenReturn(NounsIncorrect(noun: feminineNoun));
-      when(() => mockCubit.load()).thenAnswer((_) async => {});
 
       await tester.pumpApp(
         BlocProvider.value(
@@ -110,9 +109,6 @@ void main() {
         ),
       );
       expect(find.byType(NounsViewIncorrect), findsOneWidget);
-
-      await tester.tap(find.byKey(NounsViewIncorrect.nextKey));
-      verify(() => mockCubit.load()).called(1);
       await tester.a11yCheck();
     });
 
@@ -139,6 +135,9 @@ void main() {
         ),
       ).thenAnswer((_) async => {});
 
+      when(() => mockCubit.load()).thenAnswer((_) async => {});
+      when(() => mockCubit.previous()).thenAnswer((_) async => {});
+
       await tester.pumpApp(
         BlocProvider.value(
           value: mockCubit,
@@ -163,8 +162,79 @@ void main() {
         await tester.tap(genderWidget);
         verify(() => mockCubit.validate(noun: feminineNoun, answer: gender))
             .called(1);
+
+        await tester.tap(find.byKey(NounsBottomBar.nextKey));
+        verify(() => mockCubit.load()).called(1);
+
+        await tester.tap(find.byKey(NounsBottomBar.previousKey));
+        verify(() => mockCubit.previous()).called(1);
+
         await tester.a11yCheck();
       }
+    });
+
+    testWidgets('bottom bar buttons are disabled during loading',
+        (tester) async {
+      when(() => mockCubit.state).thenReturn(NounsLoading());
+
+      await tester.pumpApp(
+        BlocProvider.value(
+          value: mockCubit,
+          child: const NounsView(),
+        ),
+      );
+
+      final genders = LanguageCubit().state.genders;
+      for (final gender in genders) {
+        final genderWidget =
+            find.byKey(Key('selectGender${gender.name.capitalize()}'));
+        await tester.tap(genderWidget);
+      }
+      await tester.tap(find.byKey(NounsBottomBar.nextKey));
+      await tester.tap(find.byKey(NounsBottomBar.previousKey));
+
+      verifyNever(
+        () => mockCubit.validate(
+          noun: any(named: 'noun'),
+          answer: any(named: 'answer'),
+        ),
+      );
+      verifyNever(() => mockCubit.previous());
+      verifyNever(() => mockCubit.load());
+
+      await tester.a11yCheck();
+    });
+
+    testWidgets('bottom bar buttons are disabled during NounsCorrect',
+        (tester) async {
+      when(() => mockCubit.state).thenReturn(NounsCorrect(noun: feminineNoun));
+
+      await tester.pumpApp(
+        BlocProvider.value(
+          value: mockCubit,
+          child: const NounsView(),
+        ),
+      );
+
+      final genders = LanguageCubit().state.genders;
+      for (final gender in genders) {
+        final genderWidget =
+            find.byKey(Key('selectGender${gender.name.capitalize()}'));
+        await tester.tap(genderWidget);
+      }
+      await tester.tap(find.byKey(NounsBottomBar.nextKey));
+      await tester.tap(find.byKey(NounsBottomBar.previousKey));
+
+      verifyNever(
+        () => mockCubit.validate(
+          noun: any(named: 'noun'),
+          answer: any(named: 'answer'),
+        ),
+      );
+      verifyNever(() => mockCubit.previous());
+      verifyNever(() => mockCubit.load());
+
+      await tester.a11yCheck();
     });
   });
 }
