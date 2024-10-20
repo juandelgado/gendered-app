@@ -3,12 +3,12 @@
     "feminine": "Feminin",
     "masculine": "Maskulin",
     "neuter": "Neutrum",
-    "next": "Nächste",
     "something_went_wrong": "Da ist etwas schiefgelaufen",
     "try_again": "Versuchen Sie es erneut",
     "set_as_gender": "Setzen Sie dieses Substantiv als {gender}",
     "correct_answer": "Ihre Antwort war richtig",
     "incorrect_answer": "Ihre Antwort war falsch",
     "load_next_noun": "Laden Sie das nächste Substantiv",
+    "load_previous_noun": "Laden Sie das vorherige Substantiv",
     "reader_the_word_is": "Das Substantiv ist {noun}"
 }

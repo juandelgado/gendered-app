@@ -12,8 +12,8 @@ final class NounsLoading extends NounsState {}
 
 final class NounsLoadingError extends NounsState {}
 
-final class NounsLoaded extends NounsState {
-  NounsLoaded({required this.noun});
+final class NounStateWithNoun extends NounsState {
+  NounStateWithNoun({required this.noun});
 
   final Noun noun;
 
@@ -21,20 +21,14 @@ final class NounsLoaded extends NounsState {
   List<Object> get props => [noun];
 }
 
-final class NounsCorrect extends NounsState {
-  NounsCorrect({required this.noun});
-
-  final Noun noun;
-
-  @override
-  List<Object> get props => [noun];
+final class NounsLoaded extends NounStateWithNoun {
+  NounsLoaded({required super.noun});
 }
 
-final class NounsIncorrect extends NounsState {
-  NounsIncorrect({required this.noun});
+final class NounsCorrect extends NounStateWithNoun {
+  NounsCorrect({required super.noun});
+}
 
-  final Noun noun;
-
-  @override
-  List<Object> get props => [noun];
+final class NounsIncorrect extends NounStateWithNoun {
+  NounsIncorrect({required super.noun});
 }

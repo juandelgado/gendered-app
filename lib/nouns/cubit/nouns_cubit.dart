@@ -15,16 +15,33 @@ class NounsCubit extends Cubit<NounsState> {
   }
 
   late final NounsRepository _repository;
+  final List<Noun> sessionNouns = [];
 
   Future<void> load() async {
     emit(NounsLoading());
 
     try {
       final noun = await _repository.load();
+      sessionNouns.add(noun);
       emit(NounsLoaded(noun: noun));
     } catch (e) {
       emit(NounsLoadingError());
     }
+  }
+
+  Future<void> previous() async {
+    if (sessionNouns.isEmpty) return;
+
+    emit(NounsLoading());
+
+    Noun noun;
+    if (sessionNouns.length == 1) {
+      noun = sessionNouns.first;
+    } else {
+      noun = sessionNouns.removeLast();
+    }
+
+    emit(NounsLoaded(noun: noun));
   }
 
   Future<void> validate({required Noun noun, required Gender answer}) async {

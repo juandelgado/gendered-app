@@ -6,8 +6,6 @@
     "@masculine": {},
     "neuter": "Neuter",
     "@neuter": {},
-    "next": "Next",
-    "@next": {},
     "something_went_wrong": "Something went wrong",
     "@something_went_wrong": {},
     "try_again": "Try again",
@@ -26,6 +24,8 @@
     "@incorrect_answer": {},
     "load_next_noun": "Load next noun",
     "@load_next_noun": {},
+    "load_previous_noun": "Load previous noun",
+    "@load_previous_noun": {},
     "reader_the_word_is": "The noun is {noun}",
     "@reader_the_word_is": {
         "placeholders": {
