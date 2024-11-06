@@ -140,41 +140,70 @@ class NounsBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final language = context.read<LanguageCubit>().state;
+    final textTheme = context.textTheme;
+    final colorScheme = context.colorScheme;
 
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            CircularWidgetButton(
-              key: previousKey,
-              hint: l10n.load_previous_noun,
-              onPressed: onPreviousNoun,
-              child: const AppSvgIcon(
-                assetPath: 'assets/icons/svg/arrow_back_24dp.svg',
-                width: 24,
-                height: 24,
-              ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (final (index, gender) in language.genders.indexed)
+                  Padding(
+                    padding: EdgeInsets.only(
+                      right: index < language.genders.length - 1 ? 24 : 0,
+                    ),
+                    child: CircularTextButton(
+                      key: Key('selectGender${gender.name.capitalize()}'),
+                      hint: l10n.set_as_gender(l10n.getGender(gender)),
+                      text:
+                          l10n.getGender(gender).substring(0, 1).toUpperCase(),
+                      style: textTheme.headlineLarge?.copyWith(
+                        color: colorScheme.primary,
+                      ),
+                      width: 96,
+                      height: 96,
+                      onPressed: onGenderSelected == null
+                          ? null
+                          : () => onGenderSelected!(gender),
+                    ),
+                  ),
+              ],
             ),
-            for (final gender in language.genders)
-              CircularTextButton(
-                key: Key('selectGender${gender.name.capitalize()}'),
-                hint: l10n.set_as_gender(l10n.getGender(gender)),
-                text: l10n.getGender(gender).substring(0, 1).toUpperCase(),
-                onPressed: onGenderSelected == null
-                    ? null
-                    : () => onGenderSelected!(gender),
-              ),
-            CircularWidgetButton(
-              key: nextKey,
-              hint: l10n.load_next_noun,
-              onPressed: onNextNoun,
-              child: const AppSvgIcon(
-                assetPath: 'assets/icons/svg/arrow_forward_24dp.svg',
-                width: 24,
-                height: 24,
-              ),
+            const SizedBox(
+              height: 24,
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularWidgetButton(
+                  key: previousKey,
+                  hint: l10n.load_previous_noun,
+                  onPressed: onPreviousNoun,
+                  width: 72,
+                  height: 72,
+                  child: const AppSvgIcon(
+                    assetPath: 'assets/icons/svg/arrow_back_24dp.svg',
+                  ),
+                ),
+                const SizedBox(
+                  width: 24,
+                ),
+                CircularWidgetButton(
+                  key: nextKey,
+                  hint: l10n.load_next_noun,
+                  onPressed: onNextNoun,
+                  width: 72,
+                  height: 72,
+                  child: const AppSvgIcon(
+                    assetPath: 'assets/icons/svg/arrow_forward_24dp.svg',
+                  ),
+                ),
+              ],
             ),
           ],
         ),
