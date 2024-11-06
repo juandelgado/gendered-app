@@ -1,30 +1,33 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:gendered/model/gender.dart';
 import 'package:gendered/model/noun.dart';
-import 'package:gendered/repository/nouns_repository.dart';
+import 'package:gendered/repository/dictionaries/german_dictionary.dart';
+import 'package:gendered/repository/dictionary_repository.dart';
 import 'package:meta/meta.dart';
 
 part 'nouns_state.dart';
 
 class NounsCubit extends Cubit<NounsState> {
-  NounsCubit({NounsRepository? repository}) : super(NounsInitial()) {
-    _repository = repository ??= NounsRepository();
+  NounsCubit({DictionaryRepository? dictionary}) : super(NounsInitial()) {
+    _dictionary = dictionary ?? GermanDictionary(); // factory based on language
   }
 
-  late final NounsRepository _repository;
+  late final DictionaryRepository _dictionary;
   final List<Noun> sessionNouns = [];
 
   Future<void> load() async {
     emit(NounsLoading());
 
     try {
-      final noun = await _repository.load();
+      final noun = await _dictionary.loadRandomNoun();
       sessionNouns.add(noun);
       emit(NounsLoaded(noun: noun));
     } catch (e) {
+      log(e.toString());
       emit(NounsLoadingError());
     }
   }

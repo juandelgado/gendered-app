@@ -3,10 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gendered/model/gender.dart';
 import 'package:gendered/model/noun.dart';
 import 'package:gendered/nouns/cubit/nouns_cubit.dart';
-import 'package:gendered/repository/nouns_repository.dart';
+import 'package:gendered/repository/dictionary_repository.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockNounsRepository extends Mock implements NounsRepository {}
+class MockDictionary extends Mock implements DictionaryRepository {}
 
 const feminineNoun = Noun(name: 'Wadus', gender: Gender.feminine);
 const neuterNoun = Noun(name: 'WadusWadus', gender: Gender.neuter);
@@ -14,11 +14,11 @@ const neuterNoun = Noun(name: 'WadusWadus', gender: Gender.neuter);
 void main() {
   group('Nouns Cubit', () {
     late NounsCubit cubit;
-    late MockNounsRepository mockRepository;
+    late DictionaryRepository mockDictionary;
 
     setUp(() {
-      mockRepository = MockNounsRepository();
-      cubit = NounsCubit(repository: mockRepository);
+      mockDictionary = MockDictionary();
+      cubit = NounsCubit(dictionary: mockDictionary);
     });
 
     test('initial state is NounsInitial', () {
@@ -28,7 +28,7 @@ void main() {
     blocTest<NounsCubit, NounsState>(
       'emits NounsLoading and NounsLoaded during load',
       setUp: () {
-        when(() => mockRepository.load()).thenAnswer(
+        when(() => mockDictionary.loadRandomNoun()).thenAnswer(
           (_) async => feminineNoun,
         );
       },
@@ -44,9 +44,9 @@ void main() {
     );
 
     blocTest<NounsCubit, NounsState>(
-      'emits NounsLoadingError if the repository throws during load',
+      'emits NounsLoadingError if the dictionary throws during load',
       setUp: () {
-        when(() => mockRepository.load()).thenThrow(Exception(''));
+        when(() => mockDictionary.loadRandomNoun()).thenThrow(Exception(''));
       },
       build: () => cubit,
       act: (cubit) => cubit.load(),
@@ -56,7 +56,7 @@ void main() {
     blocTest<NounsCubit, NounsState>(
       'emits NounsCorrect if the answer is correct and loads next noun',
       setUp: () {
-        when(() => mockRepository.load()).thenAnswer(
+        when(() => mockDictionary.loadRandomNoun()).thenAnswer(
           (_) async => feminineNoun,
         );
       },
@@ -72,7 +72,7 @@ void main() {
     blocTest<NounsCubit, NounsState>(
       'emits NounsIncorrect if the answer is incorrect',
       setUp: () {
-        when(() => mockRepository.load()).thenAnswer(
+        when(() => mockDictionary.loadRandomNoun()).thenAnswer(
           (_) async => feminineNoun,
         );
       },
