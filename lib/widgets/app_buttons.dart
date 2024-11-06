@@ -71,6 +71,14 @@ class CircularTextButton extends CircularWidgetButton {
     required String text,
     required super.hint,
     required super.onPressed,
+    super.width,
+    super.height,
     super.key,
-  }) : super(child: Text(text));
+    TextStyle? style,
+  }) : super(
+          child: Text(
+            text,
+            style: style,
+          ),
+        );
 }
