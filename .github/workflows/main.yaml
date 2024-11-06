@@ -23,7 +23,7 @@ jobs:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
     with:
       flutter_channel: stable
-      flutter_version: 3.24.3
+      flutter_version: 3.24.4
       test_recursion: true
       coverage_excludes: '*.g.dart'
       min_coverage: 75
