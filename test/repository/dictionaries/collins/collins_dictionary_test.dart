@@ -94,7 +94,10 @@ void main() {
         );
 
       final noun = await dictionary.load(search: 'kunst');
-      expect(noun, const Noun(name: 'Kunst', gender: Gender.feminine));
+      expect(
+        noun,
+        const Noun(name: 'Kunst', gender: Gender.feminine, definitions: []),
+      );
     });
   });
 }

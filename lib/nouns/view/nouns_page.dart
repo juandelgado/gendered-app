@@ -145,7 +145,7 @@ class NounsBottomBar extends StatelessWidget {
 
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -283,12 +283,23 @@ class NounsViewLoaded extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 120),
-          child: LocalisedNoun(
-            noun: noun,
-          ),
+        const SizedBox(
+          height: 24,
         ),
+        LocalisedNoun(
+          noun: noun,
+        ),
+        const SizedBox(
+          height: 24,
+        ),
+        for (final (index, definition) in noun.definitions.indexed)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: LocalisedDefinition(
+              index: index + 1,
+              definition: definition,
+            ),
+          ),
       ],
     );
   }
@@ -299,7 +310,16 @@ class NounsViewLoading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const CircularProgressIndicator();
+    final l10n = context.l10n;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: AppWidgetSemantics(
+        value: l10n.load_next_noun,
+        isLiveRegion: true,
+        child: const CircularProgressIndicator(),
+      ),
+    );
   }
 }
 
@@ -328,7 +348,10 @@ class NounsViewLoadingError extends StatelessWidget {
 }
 
 class LocalisedNoun extends StatelessWidget {
-  const LocalisedNoun({required this.noun, super.key});
+  const LocalisedNoun({
+    required this.noun,
+    super.key = const Key('localisedNoun'),
+  });
 
   final Noun noun;
 
@@ -359,6 +382,48 @@ class LocalisedNoun extends StatelessWidget {
           textAlign: TextAlign.center,
           noun.name,
           style: textTheme.displayLarge?.copyWith(color: colorScheme.primary),
+        ),
+      ),
+    );
+  }
+}
+
+class LocalisedDefinition extends StatelessWidget {
+  const LocalisedDefinition({
+    required this.index,
+    required this.definition,
+    super.key = const Key('localisedDefinition'),
+  });
+
+  final String definition;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final textTheme = context.textTheme;
+    final language = context.read<LanguageCubit>().state;
+    final completeValue = l10n.reader_definition(index, definition);
+
+    return Semantics(
+      textDirection: language.textDirection,
+      attributedValue: AttributedString(
+        completeValue,
+        attributes: [
+          LocaleStringAttribute(
+            range: TextRange(
+              start: completeValue.length - definition.length,
+              end: completeValue.length,
+            ),
+            locale: language.locale,
+          ),
+        ],
+      ),
+      child: ExcludeSemantics(
+        child: Text(
+          '\t $index: $definition',
+          style: textTheme.titleLarge,
+          textAlign: TextAlign.center,
         ),
       ),
     );

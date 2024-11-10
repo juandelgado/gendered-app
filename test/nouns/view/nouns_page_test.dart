@@ -17,7 +17,9 @@ class MockNounsCubit extends MockCubit<NounsState> implements NounsCubit {}
 
 void main() {
   setUpAll(() {
-    registerFallbackValue(const Noun(name: 'wadus', gender: Gender.feminine));
+    registerFallbackValue(
+      const Noun(name: 'wadus', gender: Gender.feminine, definitions: []),
+    );
     registerFallbackValue(Gender.neuter);
   });
 
@@ -146,6 +148,12 @@ void main() {
       );
 
       expect(find.byType(NounsViewLoaded), findsOneWidget);
+
+      expect(find.byKey(const Key('localisedNoun')), findsOneWidget);
+      expect(
+        find.byKey(const Key('localisedDefintition')),
+        findsNWidgets(feminineNoun.definitions.length),
+      );
 
       // we should try to set or pick up from context
       // the language instead of assuming it is the default

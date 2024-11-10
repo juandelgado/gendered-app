@@ -5,10 +5,11 @@ import 'package:gendered/model/gender.dart';
 import 'package:gendered/model/noun.dart';
 import 'package:gendered/repository/dictionaries/collins/collins_entry_response.dart';
 import 'package:gendered/repository/dictionaries/collins/collins_search_response.dart';
+import 'package:gendered/repository/dictionaries/dictionary_repository.dart';
 import 'package:xml/xml.dart';
 import 'package:xml/xpath.dart';
 
-class CollinsDictionaryRepository {
+class CollinsDictionaryRepository implements DictionaryRepository {
   CollinsDictionaryRepository({Dio? dio}) {
     _dio = dio ??
         Dio(
@@ -23,6 +24,7 @@ class CollinsDictionaryRepository {
 
   late final Dio _dio;
 
+  @override
   Future<Noun?> load({required String search}) async {
     final searchResult = await _search(search: search);
 
@@ -67,7 +69,11 @@ class CollinsDictionaryRepository {
             .first;
 
         final gender = Gender.values.byName(genderValue!);
-        return Noun(name: entryResponse.entryLabel, gender: gender);
+        return Noun(
+          name: entryResponse.entryLabel,
+          gender: gender,
+          definitions: const [],
+        );
       } else {
         return null;
       }

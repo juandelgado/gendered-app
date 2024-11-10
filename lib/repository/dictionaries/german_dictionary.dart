@@ -1,20 +1,21 @@
 import 'dart:developer';
 
 import 'package:gendered/model/noun.dart';
-import 'package:gendered/repository/dictionaries/collins/collins_dictionary_repository.dart';
-import 'package:gendered/repository/dictionary_repository.dart';
+import 'package:gendered/repository/dictionaries/dictionary_repository.dart';
+import 'package:gendered/repository/dictionaries/woerter/woerter_dictionary_repository.dart';
+import 'package:gendered/repository/dictionary.dart';
 import 'package:gendered/repository/embedded_nouns/german_embedded_nouns.dart';
 
-class GermanDictionary implements DictionaryRepository {
+class GermanDictionary implements Dictionary {
   GermanDictionary({
-    CollinsDictionaryRepository? collins,
+    DictionaryRepository? repository,
     GermanEmbeddedNouns? embeddedNouns,
   }) {
-    _collins = collins ?? CollinsDictionaryRepository();
+    _repository = repository ?? WoerterDictionaryRepository();
     _embeddedNouns = embeddedNouns ?? GermanEmbeddedNouns();
   }
 
-  late final CollinsDictionaryRepository _collins;
+  late final DictionaryRepository _repository;
   late final GermanEmbeddedNouns _embeddedNouns;
   final int _maxRetries = 10;
 
@@ -22,7 +23,7 @@ class GermanDictionary implements DictionaryRepository {
   Future<Noun> loadRandomNoun() async {
     Noun? entry;
 
-    // collins is far from our control,
+    // repositories are far from our control,
     // so being super defensive here
     for (var i = 0; i < _maxRetries; i++) {
       try {
@@ -48,6 +49,6 @@ class GermanDictionary implements DictionaryRepository {
 
   Future<Noun?> _loadDictionaryEntry() async {
     final randomNound = await _embeddedNouns.getRandomNoun();
-    return _collins.load(search: randomNound);
+    return _repository.load(search: randomNound);
   }
 }
