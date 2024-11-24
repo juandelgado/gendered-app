@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gendered/app/cubit/language_cubit.dart';
 import 'package:gendered/extensions/string_extensions.dart';
 import 'package:gendered/model/gender.dart';
+import 'package:gendered/model/language.dart';
 import 'package:gendered/model/noun.dart';
 import 'package:gendered/nouns/cubit/nouns_cubit.dart';
 import 'package:gendered/nouns/view/nouns_page.dart';
@@ -14,6 +15,8 @@ import '../../helpers/helpers.dart';
 import '../cubit/nouns_cubit_test.dart';
 
 class MockNounsCubit extends MockCubit<NounsState> implements NounsCubit {}
+
+class MockLanguageCubit extends MockCubit<Language> implements LanguageCubit {}
 
 void main() {
   setUpAll(() {
@@ -47,9 +50,11 @@ void main() {
 
   group('NounsView', () {
     late NounsCubit mockCubit;
+    late LanguageCubit mockLanguageCubit;
 
     setUpAll(() {
       mockCubit = MockNounsCubit();
+      mockLanguageCubit = MockLanguageCubit();
     });
 
     testWidgets('renders NounsViewLoading for NounsInitial', (tester) async {
@@ -243,6 +248,28 @@ void main() {
       verifyNever(() => mockCubit.load());
 
       await tester.a11yCheck();
+    });
+
+    testWidgets('calls text to speech when the noun is tapped', (tester) async {
+      when(() => mockCubit.state).thenReturn(NounsLoaded(noun: feminineNoun));
+      when(() => mockLanguageCubit.state).thenReturn(German());
+      when(() => mockLanguageCubit.textToSpeech(text: any(named: 'text')))
+          .thenAnswer((_) async => {});
+
+      await tester.pumpApp(
+        BlocProvider.value(
+          value: mockCubit,
+          child: const NounsView(),
+        ),
+        languageCubit: mockLanguageCubit,
+      );
+
+      await tester.tap(find.byKey(const Key('localisedNoun')));
+      verify(
+        () => mockLanguageCubit.textToSpeech(
+          text: any(named: 'text', that: equals(feminineNoun.name)),
+        ),
+      ).called(1);
     });
   });
 }

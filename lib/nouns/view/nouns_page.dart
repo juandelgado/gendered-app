@@ -378,10 +378,27 @@ class LocalisedNoun extends StatelessWidget {
         ],
       ),
       child: ExcludeSemantics(
-        child: Text(
-          textAlign: TextAlign.center,
-          noun.name,
-          style: textTheme.displayLarge?.copyWith(color: colorScheme.primary),
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () async {
+            await context.read<LanguageCubit>().textToSpeech(text: noun.name);
+          },
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  noun.name,
+                  style: textTheme.displayLarge
+                      ?.copyWith(color: colorScheme.primary),
+                ),
+              ),
+              Icon(
+                Icons.volume_up,
+                size: 96,
+                color: colorScheme.primary,
+              ),
+            ],
+          ),
         ),
       ),
     );
