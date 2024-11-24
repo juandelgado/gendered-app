@@ -2,7 +2,7 @@
 
 import 'package:gendered/model/noun.dart';
 
-abstract class DictionaryRepository {
+abstract class Dictionary {
   Future<Noun> loadRandomNoun();
 }
 

@@ -3,7 +3,7 @@ import 'package:gendered/model/gender.dart';
 import 'package:gendered/model/noun.dart';
 import 'package:gendered/repository/dictionaries/collins/collins_dictionary_repository.dart';
 import 'package:gendered/repository/dictionaries/german_dictionary.dart';
-import 'package:gendered/repository/dictionary_repository.dart';
+import 'package:gendered/repository/dictionary.dart';
 import 'package:gendered/repository/embedded_nouns/german_embedded_nouns.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -18,14 +18,15 @@ void main() {
     late GermanDictionary dictionary;
 
     const wadusName = 'wadus';
-    const wadusNoun = Noun(name: wadusName, gender: Gender.neuter);
+    const wadusNoun =
+        Noun(name: wadusName, gender: Gender.neuter, definitions: []);
 
     setUp(() {
       mockCollins = MockCollins();
       mockNouns = MockGermanNouns();
 
       dictionary =
-          GermanDictionary(collins: mockCollins, embeddedNouns: mockNouns);
+          GermanDictionary(repository: mockCollins, embeddedNouns: mockNouns);
     });
 
     test('returns random noun from Collins', () async {

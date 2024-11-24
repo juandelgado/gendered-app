@@ -10,5 +10,7 @@
     "incorrect_answer": "Ihre Antwort war falsch",
     "load_next_noun": "Laden Sie das nächste Substantiv",
     "load_previous_noun": "Laden Sie das vorherige Substantiv",
-    "reader_the_word_is": "Das Substantiv ist {noun}"
+    "reader_the_word_is": "Das Substantiv ist {noun}",
+    "reader_definition": "Definition {index}: {definition}",
+    "loading_next_noun": "Nächstes laden Substantiv"
 }

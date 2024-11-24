@@ -3,18 +3,20 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gendered/model/gender.dart';
 import 'package:gendered/model/noun.dart';
 import 'package:gendered/nouns/cubit/nouns_cubit.dart';
-import 'package:gendered/repository/dictionary_repository.dart';
+import 'package:gendered/repository/dictionary.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockDictionary extends Mock implements DictionaryRepository {}
+class MockDictionary extends Mock implements Dictionary {}
 
-const feminineNoun = Noun(name: 'Wadus', gender: Gender.feminine);
-const neuterNoun = Noun(name: 'WadusWadus', gender: Gender.neuter);
+const feminineNoun =
+    Noun(name: 'Wadus', gender: Gender.feminine, definitions: []);
+const neuterNoun =
+    Noun(name: 'WadusWadus', gender: Gender.neuter, definitions: []);
 
 void main() {
   group('Nouns Cubit', () {
     late NounsCubit cubit;
-    late DictionaryRepository mockDictionary;
+    late Dictionary mockDictionary;
 
     setUp(() {
       mockDictionary = MockDictionary();

@@ -6,17 +6,17 @@ import 'package:equatable/equatable.dart';
 import 'package:gendered/model/gender.dart';
 import 'package:gendered/model/noun.dart';
 import 'package:gendered/repository/dictionaries/german_dictionary.dart';
-import 'package:gendered/repository/dictionary_repository.dart';
+import 'package:gendered/repository/dictionary.dart';
 import 'package:meta/meta.dart';
 
 part 'nouns_state.dart';
 
 class NounsCubit extends Cubit<NounsState> {
-  NounsCubit({DictionaryRepository? dictionary}) : super(NounsInitial()) {
+  NounsCubit({Dictionary? dictionary}) : super(NounsInitial()) {
     _dictionary = dictionary ?? GermanDictionary(); // factory based on language
   }
 
-  late final DictionaryRepository _dictionary;
+  late final Dictionary _dictionary;
   final List<Noun> sessionNouns = [];
 
   Future<void> load() async {

@@ -33,5 +33,18 @@
                 "type": "String"
             }
         }
-    }
+    },
+    "reader_definition": "Definition {index}: {definition}",
+    "@reader_definition": {
+        "placeholders": {
+            "index": {
+                "type": "int"
+            },
+            "definition": {
+                "type": "String"
+            }
+        }
+    },
+    "loading_next_noun": "Loading next noun",
+    "@loading_next_noun": {}
 }
