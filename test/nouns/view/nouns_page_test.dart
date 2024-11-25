@@ -107,7 +107,7 @@ void main() {
     testWidgets('renders NounsViewIncorrect for NounsIncorrect',
         (tester) async {
       when(() => mockCubit.state)
-          .thenReturn(NounsIncorrect(noun: feminineNoun));
+          .thenReturn(NounsIncorrect(noun: feminineNoun, attempt: 1));
 
       await tester.pumpApp(
         BlocProvider.value(

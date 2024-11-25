@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -70,6 +72,7 @@ class NounsView extends StatelessWidget {
                       case NounsIncorrect:
                         return NounsViewIncorrect(
                           noun: noun!,
+                          attempt: (state as NounsIncorrect).attempt,
                           onGenderSelected: (gender) {
                             context
                                 .read<NounsCubit>()
@@ -214,30 +217,49 @@ class NounsBottomBar extends StatelessWidget {
 
 class NounsViewIncorrect extends StatelessWidget {
   const NounsViewIncorrect({
-    required this.onNextNoun,
     required this.noun,
+    required this.attempt,
     required this.onGenderSelected,
+    required this.onNextNoun,
     super.key,
   });
 
   final Noun noun;
+  final int attempt;
   final ValueChanged<Gender> onGenderSelected;
   final VoidCallback onNextNoun;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final textTheme = context.textTheme;
+    final colorScheme = context.colorScheme;
+    final incorrectText = l10n.incorrect_answer(attempt - 1);
+    const maxBangs = 3;
+    final bangs = '!' * min(maxBangs, attempt - 1);
+
     return Column(
       children: [
         NounsViewLoaded(noun: noun),
-        AppWidgetSemantics(
-          value: l10n.incorrect_answer,
-          isLiveRegion: true,
-          child: const AppSvgIcon(
-            assetPath: 'assets/icons/svg/close_24dp.svg',
-            width: 100,
-            height: 100,
-          ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AppWidgetSemantics(
+              value: incorrectText,
+              isLiveRegion: true,
+              child: const AppSvgIcon(
+                assetPath: 'assets/icons/svg/close_24dp.svg',
+                width: 80,
+                height: 80,
+              ),
+            ),
+            Text(
+              bangs,
+              style: textTheme.displayLarge?.copyWith(
+                color: colorScheme.primary,
+              ),
+            ),
+          ],
         ),
       ],
     );
