@@ -1,5 +1,7 @@
 # Dictionaries
 
-Each language dictionary needs to implement the `DictionaryRepository` abstract class, which requires the implementation of `loadRandomNoun()`.
+In order to have support for a language there needs to be a `Dictionary` for it.
 
-Currently there is only a German dictionary implementation.
+Each dictionary is required to implement `loadRandomNoun()` however is best suited.
+
+German is the only language currently supported.
