@@ -1,0 +1,12 @@
+{
+    "name": "Gendered app",
+    "subtitle": "The source repository for Gendered app",
+    "description": "Welcome to my source! Here you'll find all of my apps.",
+    "website": "https://github.com/juandelgado/gendered-app",
+    "tintColor": "#F54F32",
+    "featuredApps": [
+        "app.gendered"
+    ],
+    "apps": [],
+    "news": []
+}
