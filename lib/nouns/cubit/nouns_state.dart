@@ -30,5 +30,10 @@ final class NounsCorrect extends NounStateWithNoun {
 }
 
 final class NounsIncorrect extends NounStateWithNoun {
-  NounsIncorrect({required super.noun});
+  NounsIncorrect({required super.noun, required this.attempt});
+
+  final int attempt;
+
+  @override
+  List<Object> get props => [noun, attempt];
 }
