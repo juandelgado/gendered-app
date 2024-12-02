@@ -35,9 +35,9 @@ void main() {
         );
       },
       build: () => cubit,
-      act: (cubit) => cubit.load(),
+      act: (_) => cubit.load(),
       expect: () => [isA<NounsLoading>(), isA<NounsLoaded>()],
-      verify: (cubit) {
+      verify: (_) {
         final noun = (cubit.state as NounsLoaded).noun;
         expect(noun.name, feminineNoun.name);
         expect(noun.gender, feminineNoun.gender);
@@ -51,7 +51,7 @@ void main() {
         when(() => mockDictionary.loadRandomNoun()).thenThrow(Exception(''));
       },
       build: () => cubit,
-      act: (cubit) => cubit.load(),
+      act: (_) => cubit.load(),
       expect: () => [isA<NounsLoading>(), isA<NounsLoadingError>()],
     );
 
@@ -63,7 +63,7 @@ void main() {
         );
       },
       build: () => cubit,
-      act: (cubit) => cubit.validate(
+      act: (_) => cubit.validate(
         noun: feminineNoun,
         answer: Gender.feminine,
       ),
@@ -79,18 +79,43 @@ void main() {
         );
       },
       build: () => cubit,
-      act: (cubit) => cubit.validate(
+      act: (_) => cubit.validate(
         noun: feminineNoun,
         answer: Gender.masculine,
       ),
       expect: () => [isA<NounsIncorrect>()],
     );
 
+    for (final counter in [1, 2, 3, 4, 5]) {
+      blocTest<NounsCubit, NounsState>(
+        'emits incorrect number of attempts for attempt: $counter',
+        setUp: () {
+          when(() => mockDictionary.loadRandomNoun()).thenAnswer(
+            (_) async => feminineNoun,
+          );
+        },
+        build: () => cubit,
+        act: (_) async {
+          for (var i = 0; i < counter; i++) {
+            await cubit.validate(
+              noun: feminineNoun,
+              answer: Gender.masculine,
+            );
+          }
+        },
+        skip: counter,
+        verify: (_) {
+          final attempt = (cubit.state as NounsIncorrect).attempt;
+          expect(attempt, counter);
+        },
+      );
+    }
+
     blocTest<NounsCubit, NounsState>(
       'does not emit for previous noun if session nouns is empty',
       build: () => cubit,
-      act: (cubit) => cubit.previous(),
-      verify: (cubit) => expect(cubit.state, isA<NounsInitial>()),
+      act: (_) => cubit.previous(),
+      verify: (_) => expect(cubit.state, isA<NounsInitial>()),
     );
 
     blocTest<NounsCubit, NounsState>(
@@ -99,9 +124,9 @@ void main() {
         cubit.sessionNouns.add(feminineNoun);
       },
       build: () => cubit,
-      act: (cubit) => cubit.previous(),
+      act: (_) => cubit.previous(),
       expect: () => [isA<NounsLoading>(), isA<NounsLoaded>()],
-      verify: (cubit) {
+      verify: (_) {
         final noun = (cubit.state as NounsLoaded).noun;
         expect(noun, feminineNoun);
       },
@@ -113,9 +138,9 @@ void main() {
         cubit.sessionNouns.addAll([feminineNoun, neuterNoun]);
       },
       build: () => cubit,
-      act: (cubit) => cubit.previous(),
+      act: (_) => cubit.previous(),
       expect: () => [isA<NounsLoading>(), isA<NounsLoaded>()],
-      verify: (cubit) {
+      verify: (_) {
         final noun = (cubit.state as NounsLoaded).noun;
         expect(noun, neuterNoun);
       },

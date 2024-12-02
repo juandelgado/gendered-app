@@ -254,6 +254,7 @@ class NounsViewIncorrect extends StatelessWidget {
               ),
             ),
             Text(
+              key: const Key('incorrectAttempts'),
               bangs,
               style: textTheme.displayLarge?.copyWith(
                 color: colorScheme.primary,
