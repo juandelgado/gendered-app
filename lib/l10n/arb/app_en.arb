@@ -20,8 +20,15 @@
     },
     "correct_answer": "Your answer was correct",
     "@correct_answer": {},
-    "incorrect_answer": "Your answer was incorrect",
-    "@incorrect_answer": {},
+    "incorrect_answer": "{count, plural, other{You've been wrong {count} times} zero{Your answer was incorrect} one{Incorrect again} two{This is embarrassing}}",
+    "@incorrect_answer": {
+        "description": "incorrect_answer",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
     "load_next_noun": "Load next noun",
     "@load_next_noun": {},
     "load_previous_noun": "Load previous noun",

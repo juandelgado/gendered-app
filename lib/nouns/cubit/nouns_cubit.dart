@@ -18,11 +18,13 @@ class NounsCubit extends Cubit<NounsState> {
 
   late final Dictionary _dictionary;
   final List<Noun> sessionNouns = [];
+  int attempt = 0;
 
   Future<void> load() async {
     emit(NounsLoading());
 
     try {
+      attempt = 0;
       final noun = await _dictionary.loadRandomNoun();
       sessionNouns.add(noun);
       emit(NounsLoaded(noun: noun));
@@ -53,7 +55,8 @@ class NounsCubit extends Cubit<NounsState> {
       await Future<void>.delayed(const Duration(milliseconds: 1500));
       unawaited(load());
     } else {
-      emit(NounsIncorrect(noun: noun));
+      attempt += 1;
+      emit(NounsIncorrect(noun: noun, attempt: attempt));
     }
   }
 }
