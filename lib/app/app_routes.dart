@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:gendered/licenses/view/licenses_page.dart';
 import 'package:gendered/nouns/view/nouns_page.dart';
 import 'package:go_router/go_router.dart';
 
@@ -22,5 +23,5 @@ class HomePageRoute extends GoRouteData {
 class LincensesPageRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const LicensePage();
+      const LicensesPage();
 }
