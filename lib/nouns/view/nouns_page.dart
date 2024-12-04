@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gendered/app/app_routes.dart';
 import 'package:gendered/app/cubit/language_cubit.dart';
 import 'package:gendered/extensions/string_extensions.dart';
 import 'package:gendered/extensions/theme_extensions.dart';
@@ -12,6 +13,7 @@ import 'package:gendered/model/noun.dart';
 import 'package:gendered/nouns/cubit/nouns_cubit.dart';
 import 'package:gendered/widgets/app_buttons.dart';
 import 'package:gendered/widgets/app_svg_icon.dart';
+import 'package:gendered/widgets/semantics/app_button_semantics.dart';
 import 'package:gendered/widgets/semantics/app_widget_semantics.dart';
 
 class NounsPage extends StatelessWidget {
@@ -39,6 +41,7 @@ class NounsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final language = context.read<LanguageCubit>().state;
+    final l10n = context.l10n;
 
     return BlocBuilder<NounsCubit, NounsState>(
       builder: (context, state) {
@@ -59,6 +62,17 @@ class NounsView extends StatelessWidget {
                 ),
               ],
             ),
+            actions: [
+              AppButtonSemantics(
+                hint: l10n.settings,
+                child: IconButton(
+                  onPressed: () => LincensesPageRoute().go(context),
+                  icon: const Icon(
+                    Icons.settings,
+                  ),
+                ),
+              ),
+            ],
           ),
           body: SingleChildScrollView(
             child: Padding(

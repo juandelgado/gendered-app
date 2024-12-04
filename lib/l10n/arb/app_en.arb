@@ -53,5 +53,11 @@
         }
     },
     "loading_next_noun": "Loading next noun",
-    "@loading_next_noun": {}
+    "@loading_next_noun": {},
+    "licenses_title": "Licenses",
+    "@licenses_title": {},
+    "licenses_thanks": "The Gendered app is only possible through the tireless work of so many Open Source contributors around the world 🙏",
+    "@licenses_thanks": {},
+    "settings": "Settings",
+    "@settings": {}
 }
