@@ -24,6 +24,9 @@ class AppThemes {
       error: const Color(0xffcf6679),
       onError: Colors.black,
     ),
+    appBarTheme: const AppBarTheme(
+      centerTitle: true,
+    ),
     useMaterial3: true,
   );
 
@@ -32,6 +35,9 @@ class AppThemes {
     colorScheme: ColorScheme.fromSeed(
       seedColor: Colors.amberAccent,
       dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
+    ),
+    appBarTheme: const AppBarTheme(
+      centerTitle: true,
     ),
     useMaterial3: true,
   );

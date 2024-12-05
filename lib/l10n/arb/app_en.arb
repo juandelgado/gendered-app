@@ -53,5 +53,15 @@
         }
     },
     "loading_next_noun": "Loading next noun",
-    "@loading_next_noun": {}
+    "@loading_next_noun": {},
+    "licenses_title": "Licenses",
+    "@licenses_title": {},
+    "licenses_thanks": "The Gendered app is only possible through the tireless work of so many Open Source contributors around the world 🙏",
+    "@licenses_thanks": {},
+    "loading_licenses": "Loading licenses",
+    "@loading_licenses": {},
+    "loading_licenses_error": "There was an error while loading the licenses",
+    "@loading_licenses_error": {},
+    "settings": "Settings",
+    "@settings": {}
 }

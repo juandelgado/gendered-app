@@ -12,5 +12,10 @@
     "load_previous_noun": "Laden Sie das vorherige Substantiv",
     "reader_the_word_is": "Das Substantiv ist {noun}",
     "reader_definition": "Definition {index}: {definition}",
-    "loading_next_noun": "Nächstes laden Substantiv"
+    "loading_next_noun": "Nächstes laden Substantiv",
+    "licenses_title": "Licenses",
+    "licenses_thanks": "Die Gendered-App ist nur durch die unermüdliche Arbeit so vieler Open-Source-Mitwirkender auf der ganzen Welt möglich 🙏",
+    "loading_licenses": "Lizenzen laden",
+    "loading_licenses_error": "Beim Laden der Lizenzen ist ein Fehler aufgetreten",
+    "settings": "Einstellungen"
 }
