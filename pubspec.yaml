@@ -24,7 +24,7 @@ dependencies:
   json_annotation: ^4.9.0
   json_serializable: ^6.9.0
   meta: ^1.15.0
-  package_info_plus: ^8.1.1
+  package_info_plus: ^8.1.2
   xml: ^6.5.0
 
 dev_dependencies:
